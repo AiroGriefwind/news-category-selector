@@ -352,18 +352,17 @@ def main() -> None:
     strategy_label = st.selectbox("分割策略", options=list(SPLIT_STRATEGY_OPTIONS.keys()), index=0)
     strategy_value = SPLIT_STRATEGY_OPTIONS[strategy_label]
 
-    st.text_input("新闻标题", placeholder="请输入标题", key="draft_title")
-    st.text_area(
-        "WP 原始正文（可包含 HTML/caption/img）",
-        height=320,
-        placeholder="请粘贴 WP 后台“文字”模式内容",
-        key="draft_body",
-    )
-    col_save, col_run = st.columns([1, 1])
-    with col_save:
-        save_button = st.button("保存")
-    with col_run:
-        run_button = st.button("开始分析", type="primary")
+    with st.form("article_input_form", clear_on_submit=True):
+        st.text_input("新闻标题", placeholder="请输入标题", key="draft_title")
+        st.text_area(
+            "WP 原始正文（可包含 HTML/caption/img）",
+            height=320,
+            placeholder="请粘贴 WP 后台“文字”模式内容",
+            key="draft_body",
+        )
+        save_button = st.form_submit_button("保存")
+
+    run_button = st.button("开始分析", type="primary")
 
     if save_button:
         title = st.session_state["draft_title"].strip()
@@ -378,8 +377,6 @@ def main() -> None:
                     "raw_body": raw_body,
                 }
             )
-            st.session_state["draft_title"] = ""
-            st.session_state["draft_body"] = ""
             st.session_state["flash_message"] = "文章已成功添加。"
             st.rerun()
 
