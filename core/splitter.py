@@ -83,7 +83,30 @@ def _build_subtitle_chunks(title: str, article: CleanedArticle) -> list[ChunkInp
     return chunks
 
 
-def split_article(title: str, article: CleanedArticle, group_size: int = 3) -> list[ChunkInput]:
+def _build_first_n_paragraphs_chunk(title: str, paragraphs: list[str], limit: int = 3) -> list[ChunkInput]:
+    first_part = paragraphs[:limit]
+    if not first_part:
+        return []
+    return [
+        ChunkInput(
+            chunk_index=1,
+            chunk_type="paragraph",
+            title_anchor=title,
+            subtitle="",
+            text=_join_paragraphs(first_part),
+        )
+    ]
+
+
+def split_article(
+    title: str,
+    article: CleanedArticle,
+    group_size: int = 3,
+    strategy: str = "full",
+) -> list[ChunkInput]:
+    if strategy == "first3":
+        return _build_first_n_paragraphs_chunk(title=title, paragraphs=article.paragraphs, limit=3)
+
     if article.has_subtitles:
         subtitle_chunks = _build_subtitle_chunks(title=title, article=article)
         if subtitle_chunks:

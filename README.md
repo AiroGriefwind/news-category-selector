@@ -6,13 +6,14 @@
 ## 功能
 
 - WP 原始 HTML 内容清洗（caption、img、实体解码）
-- 分割策略：
-  - 标题单独分析
-  - 优先按副标题分块（`h2/h3/h4`，以及 `p` 内纯粗体小标题）
-  - 无副标题时按每 3 段分块
-- 双模型对比分析（模型 A / 模型 B）
-- 可视化进度条（标题 -> chunk -> 总决策）
-- 结果下载为 JSON
+- 单模型可选（`R1` / `R1-Distill`，默认 Distill）
+- 分割策略下拉：
+  - 全文分割：优先按副标题分块（`h2/h3/h4`，以及 `p` 内纯粗体小标题），无副标题时按每 3 段分块
+  - 前三段分割：仅使用标题 + 前三自然段（默认）
+- 批量导入：文章可先保存到列表，支持删除，再统一开始分析
+- 多文章状态追踪：等待中 / 处理中 / 完成 / 出错
+- 每篇文章显示总耗时与阶段耗时（标题 / 分块 / 总决策）
+- 下载全部结果为 ZIP（每篇一个 JSON）
 
 ## 环境变量
 
@@ -21,8 +22,7 @@
 ```env
 LLM_BASE_URL=https://api.siliconflow.cn/v1
 LLM_API_KEY=your_api_key
-LLM_MODEL=Pro/deepseek-ai/DeepSeek-R1
-LLM_MODEL_B=deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+LLM_MODEL=deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
 LLM_TEMPERATURE=0.2
 LLM_TIMEOUT_SECONDS=90
 LLM_MAX_RETRIES=3
